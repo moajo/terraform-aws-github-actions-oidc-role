@@ -2,6 +2,8 @@
 
 This is terraform module to create an iam role that can be assumeRole from github actions of a specific repository.
 
+see: https://awsteele.com/blog/2021/09/15/aws-federation-comes-to-github-actions.html
+
 # usage
 
 ```tf

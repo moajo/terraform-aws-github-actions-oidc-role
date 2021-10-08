@@ -85,10 +85,11 @@ No modules.
 
 ## Inputs
 
-| Name                                                            | Description                                          | Type     | Default | Required |
-| --------------------------------------------------------------- | ---------------------------------------------------- | -------- | ------- | :------: |
-| <a name="input_repository"></a> [repository](#input_repository) | The name of the repository(e.g. 'username/reponame') | `string` | n/a     |   yes    |
-| <a name="input_role_name"></a> [role_name](#input_role_name)    | The name of the role                                 | `string` | n/a     |   yes    |
+| Name                                                                                 | Description                  | Type     | Default | Required |
+| ------------------------------------------------------------------------------------ | ---------------------------- | -------- | ------- | :------: |
+| <a name="input_organization_name"></a> [organization_name](#input_organization_name) | The name of the organization | `string` | n/a     |   yes    |
+| <a name="input_repository_name"></a> [repository_name](#input_repository_name)       | The name of the repository   | `string` | n/a     |   yes    |
+| <a name="input_role_name"></a> [role_name](#input_role_name)                         | The name of the role         | `string` | n/a     |   yes    |
 
 ## Outputs
 

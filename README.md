@@ -8,9 +8,10 @@ see: https://awsteele.com/blog/2021/09/15/aws-federation-comes-to-github-actions
 
 ```tf
 module "federation_role" {
-  source     = "git@github.com:moajo/terraform-aws-github-actions-federation-role.git"
-  role_name  = "hoge"
-  repository = "moajo/terraform-aws-github-actions-federation-role"
+  source            = "git@github.com:moajo/terraform-aws-github-actions-federation-role.git"
+  role_name         = "hoge"
+  organization_name = "moajo"
+  repository_name   = "terraform-aws-github-actions-federation-role"
 }
 
 resource "aws_iam_role_policy" "sample" {

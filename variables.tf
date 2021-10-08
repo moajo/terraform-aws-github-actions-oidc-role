@@ -3,7 +3,12 @@ variable "role_name" {
   description = "The name of the role"
 }
 
-variable "repository" {
+variable "repository_name" {
   type        = string
-  description = "The name of the repository(e.g. 'username/reponame')"
+  description = "The name of the repository"
+}
+
+variable "organization_name" {
+  type        = string
+  description = "The name of the organization"
 }

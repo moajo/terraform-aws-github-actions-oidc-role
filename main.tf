@@ -12,7 +12,7 @@ resource "aws_iam_role" "main" {
         },
         "Condition" : {
           "StringLike" : {
-            "vstoken.actions.githubusercontent.com:sub" : "repo:${var.repository}:*"
+            "token.actions.githubusercontent.com:sub" : "repo:${var.organization_name}/${var.repository_name}:*"
           }
         }
       }
@@ -21,7 +21,7 @@ resource "aws_iam_role" "main" {
 }
 
 resource "aws_iam_openid_connect_provider" "github_actions" {
-  url             = "https://vstoken.actions.githubusercontent.com"
-  client_id_list  = ["https://github.com/${var.repository}"]
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["https://github.com/${var.organization_name}"]
   thumbprint_list = ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"]
 }

@@ -1,17 +1,28 @@
 # terraform-aws-github-actions-federation-role
 
-This is terraform module to create an iam role that can be assumeRole from github actions of a specific repository.
+This is terraform module to create an iam role that can be assumeRole from github actions of a specific repository(and specific branches).
 
-see: https://awsteele.com/blog/2021/09/15/aws-federation-comes-to-github-actions.html
+see: https://docs.github.com/ja/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
 
 # usage
 
 ```tf
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"]
+}
+
 module "federation_role" {
-  source            = "git@github.com:moajo/terraform-aws-github-actions-federation-role.git"
-  role_name         = "hoge"
-  organization_name = "moajo"
-  repository_name   = "terraform-aws-github-actions-federation-role"
+  source                   = "git@github.com:moajo/terraform-aws-github-actions-federation-role.git"
+  role_name                = "hoge"
+  repo_to_allow_assume     = "moajo/hogehoge"
+
+  # Optional: Allow assume from all branches and tags by default.
+  # branches_to_allow_assume = [
+  #   "hoge",   # exact match
+  #   "fuga-*", # pattern match(this matches "fuga-1" or "fuga-2"...)
+  # ]
 }
 
 resource "aws_iam_role_policy" "sample" {
@@ -41,9 +52,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  AWS_DEFAULT_REGION: us-east-1
   AWS_ROLE_ARN: arn:aws:iam::xxxxxxxxxxxx:role/hoge
-  AWS_WEB_IDENTITY_TOKEN_FILE: /tmp/awscreds
 
 jobs:
   get-caller-identity:
@@ -52,9 +61,11 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Configure AWS
-        run: |
-          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
       - run: aws sts get-caller-identity
 ```
 
@@ -78,18 +89,19 @@ No modules.
 
 ## Resources
 
-| Name                                                                                                                                                      | Type     |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| [aws_iam_openid_connect_provider.github_actions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider) | resource |
-| [aws_iam_role.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role)                                                 | resource |
+| Name                                                                                                                          | Type        |
+| ----------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| [aws_iam_role.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role)                     | resource    |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 
-| Name                                                                                 | Description                  | Type     | Default | Required |
-| ------------------------------------------------------------------------------------ | ---------------------------- | -------- | ------- | :------: |
-| <a name="input_organization_name"></a> [organization_name](#input_organization_name) | The name of the organization | `string` | n/a     |   yes    |
-| <a name="input_repository_name"></a> [repository_name](#input_repository_name)       | The name of the repository   | `string` | n/a     |   yes    |
-| <a name="input_role_name"></a> [role_name](#input_role_name)                         | The name of the role         | `string` | n/a     |   yes    |
+| Name                                                                                                                              | Description                                                                                                                          | Type           | Default | Required |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------- | ------- | :------: |
+| <a name="input_branches_to_allow_assume"></a> [branches_to_allow_assume](#input_branches_to_allow_assume)                         | Deny assuming from branches other than those included in this list.<br>If this value is null, assuming from all branches is allowed. | `list(string)` | `null`  |    no    |
+| <a name="input_github_actions_oidc_provider_arn"></a> [github_actions_oidc_provider_arn](#input_github_actions_oidc_provider_arn) | ARN of aws_iam_openid_connect_provider<br>(default: 'arn:aws:iam::ACCOUNT_ID:oidc-provider/token.actions.githubusercontent.com')     | `string`       | `null`  |    no    |
+| <a name="input_repo_to_allow_assume"></a> [repo_to_allow_assume](#input_repo_to_allow_assume)                                     | GitHub repository to allow Assume for this role.<br>(e.g. 'moajo/hoge-repo')                                                         | `string`       | n/a     |   yes    |
+| <a name="input_role_name"></a> [role_name](#input_role_name)                                                                      | The name of the role                                                                                                                 | `string`       | n/a     |   yes    |
 
 ## Outputs
 

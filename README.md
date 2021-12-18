@@ -1,4 +1,4 @@
-# terraform-aws-github-actions-federation-role
+# terraform-aws-github-actions-oidc-role
 
 This is terraform module to create an iam role that can be assumeRole from github actions of a specific repository(and specific branches).
 
@@ -14,7 +14,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
 }
 
 module "federation_role" {
-  source                   = "git@github.com:moajo/terraform-aws-github-actions-federation-role.git"
+  source                   = "git@github.com:moajo/terraform-aws-github-actions-oidc-role.git?ref=v2.0.0"
   role_name                = "hoge"
   repo_to_allow_assume     = "moajo/hogehoge"
 

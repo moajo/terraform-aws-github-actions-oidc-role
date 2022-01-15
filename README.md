@@ -7,10 +7,16 @@ see: https://docs.github.com/ja/actions/deployment/security-hardening-your-deplo
 # usage
 
 ```tf
+data "http" "github_actions_openid_configuration" {
+  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
+}
+data "tls_certificate" "github_actions" {
+  url = jsondecode(data.http.github_actions_openid_configuration.body).jwks_uri
+}
 resource "aws_iam_openid_connect_provider" "github_actions" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"]
+  thumbprint_list = [data.tls_certificate.github_actions.certificates[0].sha1_fingerprint]
 }
 
 module "github_actions_role" {

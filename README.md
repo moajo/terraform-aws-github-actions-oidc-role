@@ -13,7 +13,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   thumbprint_list = ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"]
 }
 
-module "federation_role" {
+module "github_actions_role" {
   source                   = "git@github.com:moajo/terraform-aws-github-actions-oidc-role.git?ref=v2.0.0"
   role_name                = "hoge"
   repo_to_allow_assume     = "moajo/hogehoge"
@@ -27,7 +27,7 @@ module "federation_role" {
 
 resource "aws_iam_role_policy" "sample" {
   name = "sample"
-  role = module.federation_role.role.id
+  role = module.github_actions_role.role.id
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

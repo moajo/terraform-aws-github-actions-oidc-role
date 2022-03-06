@@ -20,7 +20,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
 }
 
 module "github_actions_role" {
-  source                   = "git@github.com:moajo/terraform-aws-github-actions-oidc-role.git?ref=v2.0.0"
+  source                   = "git@github.com:moajo/terraform-aws-github-actions-oidc-role.git?ref=v3.0.0"
   role_name                = "hoge"
   repo_to_allow_assume     = "moajo/hogehoge"
 
@@ -81,13 +81,13 @@ jobs:
 
 | Name                                                   | Version |
 | ------------------------------------------------------ | ------- |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 3.0  |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 4.0  |
 
 ## Providers
 
 | Name                                             | Version |
 | ------------------------------------------------ | ------- |
-| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 3.0  |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 4.0  |
 
 ## Modules
 

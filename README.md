@@ -20,7 +20,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
 }
 
 module "github_actions_role" {
-  source                   = "github.com/moajo/terraform-aws-github-actions-oidc-role.git?ref=v3.1.0"
+  source                   = "github.com/moajo/terraform-aws-github-actions-oidc-role.git?ref=v3.2.0"
   role_name                = "hoge"
   repo_to_allow_assume     = "moajo/hogehoge"
 

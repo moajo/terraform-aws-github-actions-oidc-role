@@ -31,4 +31,5 @@ resource "aws_iam_role" "main" {
       }
     ]
   })
+  permissions_boundary = var.permissions_boundary_arn
 }

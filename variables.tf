@@ -28,3 +28,11 @@ Deny assuming from branches other than those included in this list.
 If this value is null, assuming from all branches is allowed.
 EOT
 }
+
+variable "permissions_boundary_arn" {
+  type        = string
+  default     = null
+  description = <<EOT
+ARN of the permissions boundary to use for this role.
+EOT
+}
